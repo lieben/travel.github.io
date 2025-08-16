@@ -2959,7 +2959,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         content.innerHTML = `
                             <h2>第${dayData.day}天: ${dayData.parentVersion.title}</h2>
                              <div class="info-section">
-                                <h4>🗓️ 詳細行程</h4>
+                                <h4>🗓️ 详细行程</h4>
                                 <ul>${(dayData.parentVersion.itinerary || []).map(i => `<li>${i}</li>`).join('')}</ul>
                             </div>
                             <div class="info-section">
@@ -2976,7 +2976,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     let safetyHTML = '<h2>🚨 安全须知</h2>';
                     safetyHTML += `
                         <div class="emergency-contact">
-                            <h4>🚑 緊急聯絡</h4>
+                            <h4>🚑 紧急联络</h4>
                             <div class="contact-number">报警：110</div>
                             <div class="contact-number">火警：119</div>
                             <div class="contact-number">医疗急救：120</div>
@@ -2985,8 +2985,8 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     if (isInternational) {
                         safetyHTML += `
                             <div class="emergency-contact">
-                                <h4>🏛️ 中國領事館</h4>
-                                <p>外交部全球領事保護熱線：+86-10-12308</p>
+                                <h4>🏛️ 中国领事馆</h4>
+                                <p>外交部全球领事保护热线：+86-10-12308</p>
                             </div>
                         `;
                     }
