@@ -78,10 +78,40 @@ header p {
     align-items: center;
     position: relative;
     z-index: 2;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    padding: 10px;
+    border-radius: 10px;
+    margin: -10px -10px 15px -10px;
 }
-.form-block h3 span { 
-    font-size: 1.8em; 
-    margin-right: 10px; 
+.form-block h3:hover {
+    background-color: rgba(92, 107, 192, 0.1);
+    transform: translateY(-2px);
+}
+.form-block h3 span {
+    font-size: 1.8em;
+    margin-right: 10px;
+}
+.form-block h3::after {
+    content: '▼';
+    margin-left: auto;
+    font-size: 0.8em;
+    transition: transform 0.3s ease;
+    color: #5C6BC0;
+}
+.form-block.collapsed h3::after {
+    transform: rotate(-90deg);
+}
+.form-block-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+.form-block.collapsed .form-block-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
 }
 .input-group { 
     display: flex; 
@@ -114,6 +144,33 @@ input:focus, select:focus, textarea:focus {
 textarea {
     resize: vertical;
     min-height: 80px;
+}
+
+/* 可编辑元素样式 */
+.editable-title, .editable-mission, .editable-funfact, .editable-challenge,
+.editable-knowledge, .editable-info, .editable-topic, .editable-story,
+.editable-prompt, .editable-journal {
+    transition: all 0.3s ease;
+}
+
+.editable-title:focus, .editable-mission:focus, .editable-funfact:focus,
+.editable-challenge:focus, .editable-knowledge:focus, .editable-info:focus,
+.editable-topic:focus, .editable-story:focus, .editable-prompt:focus,
+.editable-journal:focus {
+    background-color: rgba(92, 107, 192, 0.1) !important;
+    border: 1px solid #5C6BC0 !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.2);
+}
+
+.editable-title:hover, .editable-mission:hover, .editable-funfact:hover,
+.editable-challenge:hover, .editable-knowledge:hover, .editable-info:hover,
+.editable-topic:hover, .editable-story:hover, .editable-prompt:hover,
+.editable-journal:hover {
+    background-color: rgba(92, 107, 192, 0.05) !important;
+    cursor: text;
 }
 .api-key-row { 
     display: flex; 
@@ -689,6 +746,81 @@ textarea {
     border: 1px solid #ccc;
     cursor: crosshair;
     background-color: #fff;
+    border-radius: 8px;
+}
+
+/* 创作区样式优化 */
+.creative-zone {
+    position: relative;
+    border: 2px dashed #FFCC80;
+    border-radius: 15px;
+    background: #FFFDE7;
+    padding: 15px;
+    min-height: 300px;
+}
+
+.creative-zone-header {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #FF8A65;
+    background: #FFFDE7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.creative-prompt {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    color: #8D6E63;
+    text-align: center;
+    font-style: italic;
+}
+
+.creative-zone .drawing-area {
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Free Space区域样式 */
+.free-space-zone {
+    position: relative;
+    border: 2px dashed #90CAF9;
+    border-radius: 15px;
+    background: #E3F2FD;
+    padding: 15px;
+    min-height: 300px;
+}
+
+.free-space-header {
+    position: absolute;
+    top: 8px;
+    left: 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #5C6BC0;
+    background: #E3F2FD;
+    padding: 2px 8px;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.free-space-zone .drawing-area {
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
 }
 
 .sticker-palette {
@@ -1299,7 +1431,6 @@ img[alt]:after {
     }
     .version-content {
         display: none !important;
-        page-break-before: always;
     }
     .version-content.active {
         display: block !important;
@@ -1313,6 +1444,36 @@ img[alt]:after {
         border: none !important;
         box-shadow: none;
         page-break-inside: avoid;
+        page-break-before: always;
+        min-height: 90vh;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .location-page-container:first-child {
+        page-break-before: auto;
+    }
+
+    /* 确保每个地点的内容不会跨页分割 */
+    .section-container {
+        page-break-inside: avoid;
+        margin-bottom: 15px;
+    }
+
+    /* 标题不要单独在页面底部 */
+    .location-title-h1, .location-title-h2 {
+        page-break-after: avoid;
+    }
+
+    /* 确保版本内容容器不会产生额外分页 */
+    .version-content-wrapper {
+        page-break-inside: auto;
+    }
+
+    /* 优化页面边距 */
+    @page {
+        margin: 1cm;
+        size: A4;
     }
 }
 
@@ -1412,6 +1573,7 @@ img[alt]:after {
             <!-- API 设置 -->
             <div class="form-block">
                 <h3><span>🔑</span>连接AI助手</h3>
+                <div class="form-block-content">
                 <div class="input-group">
                     <label for="api-provider">选择AI服务商</label>
                     <select id="api-provider">
@@ -1425,11 +1587,51 @@ img[alt]:after {
                     <label for="custom-endpoint">自定义API端点</label>
                     <input type="text" id="custom-endpoint" placeholder="例如：https://api.deepseek.com/v1">
                 </div>
-                <div class="input-group" style="margin-top: 15px;">
-                    <label for="api-key">API Key</label>
+                <!-- Gemini API Key -->
+                <div class="input-group api-key-group" id="gemini-key-group" style="margin-top: 15px;">
+                    <label for="gemini-api-key">Gemini API Key</label>
                     <div class="api-key-row">
-                        <input type="password" id="api-key" placeholder="请在此粘贴您的API Key">
+                        <input type="password" id="gemini-api-key" placeholder="AIza... (从 Google AI Studio 获取)">
                         <button type="button" class="fetch-btn" id="fetch-models-btn" disabled>拉取模型</button>
+                    </div>
+                    <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                        获取地址: <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                    </div>
+                </div>
+
+                <!-- OpenAI API Key -->
+                <div class="input-group api-key-group" id="openai-key-group" style="margin-top: 15px; display: none;">
+                    <label for="openai-api-key">OpenAI API Key</label>
+                    <div class="api-key-row">
+                        <input type="password" id="openai-api-key" placeholder="sk-... (从 OpenAI 获取)">
+                        <button type="button" class="fetch-btn" id="fetch-models-btn" disabled>拉取模型</button>
+                    </div>
+                    <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                        获取地址: <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>
+                    </div>
+                </div>
+
+                <!-- DeepSeek API Key -->
+                <div class="input-group api-key-group" id="deepseek-key-group" style="margin-top: 15px; display: none;">
+                    <label for="deepseek-api-key">DeepSeek API Key</label>
+                    <div class="api-key-row">
+                        <input type="password" id="deepseek-api-key" placeholder="sk-... (从 DeepSeek 获取)">
+                        <button type="button" class="fetch-btn" id="fetch-models-btn" disabled>拉取模型</button>
+                    </div>
+                    <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                        获取地址: <a href="https://platform.deepseek.com/api_keys" target="_blank">DeepSeek Platform</a>
+                    </div>
+                </div>
+
+                <!-- Custom API Key -->
+                <div class="input-group api-key-group" id="custom-key-group" style="margin-top: 15px; display: none;">
+                    <label for="custom-api-key">自定义API Key</label>
+                    <div class="api-key-row">
+                        <input type="password" id="custom-api-key" placeholder="根据您的服务商要求输入">
+                        <button type="button" class="fetch-btn" id="fetch-models-btn" disabled>拉取模型</button>
+                    </div>
+                    <div style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                        请参考您的自定义服务商文档
                     </div>
                 </div>
                 <div class="input-group" style="margin-top: 15px;">
@@ -1462,29 +1664,35 @@ img[alt]:after {
                         不填写将使用模拟搜索结果。获取免费API Key: <a href="https://serpapi.com" target="_blank">SerpAPI</a>
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- 使用模式选择 -->
             <div class="form-block">
                 <h3><span>🎯</span>第一步：选择使用模式</h3>
+                <div class="form-block-content">
                 <div class="icon-options" id="usage-mode-selector">
                     <label><input type="radio" name="usage-mode" value="ai-planning" checked><div class="content"><div class="icon">🤖</div><span>AI规划行程</span><div style="font-size:0.8em;color:#666;margin-top:3px;">让AI为您安排完整行程</div></div></label>
                     <label><input type="radio" name="usage-mode" value="existing-plan"><div class="content"><div class="icon">📋</div><span>已有行程安排</span><div style="font-size:0.8em;color:#666;margin-top:3px;">为现有行程补充攻略信息</div></div></label>
+                </div>
                 </div>
             </div>
 
             <!-- 语言选择 -->
             <div class="form-block">
                 <h3><span>🌐</span>第二步：选择攻略语言</h3>
+                <div class="form-block-content">
                  <div class="icon-options">
                     <label><input type="radio" name="language" value="Simplified Chinese" checked><div class="content"><div class="icon">🇨🇳</div><span>简体中文</span></div></label>
                     <label><input type="radio" name="language" value="English"><div class="content"><div class="icon">🇬🇧</div><span>English</span></div></label>
+                </div>
                 </div>
             </div>
 
             <!-- 旅程基本设置 -->
             <div class="form-block">
                 <h3><span>🗺️</span>第三步：我们的旅程</h3>
+                <div class="form-block-content">
                 <div class="input-label">旅程类型</div>
                 <div class="icon-options" id="trip-type-selector">
                     <label><input type="radio" name="trip-type" value="day-trip" checked><div class="content"><div class="icon">🏙️</div><span>一日游</span></div></label>
@@ -1551,11 +1759,13 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
 
             <!-- 家庭成员 -->
             <div class="form-block">
                 <h3><span>👨‍👩‍👧‍👦</span>第四步：和谁一起去？</h3>
+                <div class="form-block-content">
                 <div class="dynamic-list" id="family-list">
                     <div class="list-item">
                         <input type="text" placeholder="称谓 (如: 爸爸)" value="爸爸">
@@ -1569,11 +1779,58 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     </div>
                 </div>
                 <button type="button" class="add-btn" id="add-family-btn">+</button>
+                </div>
             </div>
-            
+
+            <!-- 兴趣爱好选择 -->
+            <div class="form-block">
+                <h3><span>🎈</span>第五步：我们的喜好与特殊需求</h3>
+                <div class="form-block-content">
+                <div class="input-label">我们喜欢做什么？(可多选)</div>
+                <div class="icon-options" id="interests-selector">
+                    <label><input type="checkbox" name="interests" value="主题乐园"><div class="content"><div class="icon">🎢</div><span>主题乐园</span></div></label>
+                    <label><input type="checkbox" name="interests" value="博物馆"><div class="content"><div class="icon">🏛️</div><span>博物馆</span></div></label>
+                    <label><input type="checkbox" name="interests" value="亲近自然"><div class="content"><div class="icon">🌳</div><span>亲近自然</span></div></label>
+                    <label><input type="checkbox" name="interests" value="吃好吃的"><div class="content"><div class="icon">🍔</div><span>吃好吃的</span></div></label>
+                    <label><input type="checkbox" name="interests" value="购物"><div class="content"><div class="icon">🛍️</div><span>购物</span></div></label>
+                    <label><input type="checkbox" name="interests" value="历史文化"><div class="content"><div class="icon">🏯</div><span>历史文化</span></div></label>
+                    <label><input type="checkbox" name="interests" value="艺术展览"><div class="content"><div class="icon">🎨</div><span>艺术展览</span></div></label>
+                    <label><input type="checkbox" name="interests" value="科技体验"><div class="content"><div class="icon">🔬</div><span>科技体验</span></div></label>
+                    <label><input type="checkbox" name="interests" value="运动健身"><div class="content"><div class="icon">⚽</div><span>运动健身</span></div></label>
+                    <label><input type="checkbox" name="interests" value="海滩海岛"><div class="content"><div class="icon">🏖️</div><span>海滩海岛</span></div></label>
+                    <label><input type="checkbox" name="interests" value="山川徒步"><div class="content"><div class="icon">⛰️</div><span>山川徒步</span></div></label>
+                    <label><input type="checkbox" name="interests" value="动物园"><div class="content"><div class="icon">🦁</div><span>动物园</span></div></label>
+                    <label><input type="checkbox" name="interests" value="水族馆"><div class="content"><div class="icon">🐠</div><span>水族馆</span></div></label>
+                    <label><input type="checkbox" name="interests" value="游乐场"><div class="content"><div class="icon">🎠</div><span>游乐场</span></div></label>
+                    <label><input type="checkbox" name="interests" value="温泉SPA"><div class="content"><div class="icon">♨️</div><span>温泉SPA</span></div></label>
+                    <label><input type="checkbox" name="interests" value="夜市小吃"><div class="content"><div class="icon">🍜</div><span>夜市小吃</span></div></label>
+                    <label><input type="checkbox" name="interests" value="摄影打卡"><div class="content"><div class="icon">📸</div><span>摄影打卡</span></div></label>
+                    <label><input type="checkbox" name="interests" value="手工体验"><div class="content"><div class="icon">🎭</div><span>手工体验</span></div></label>
+                    <label><input type="checkbox" name="interests" value="音乐演出"><div class="content"><div class="icon">🎵</div><span>音乐演出</span></div></label>
+                    <label><input type="checkbox" name="interests" value="当地民俗"><div class="content"><div class="icon">🎎</div><span>当地民俗</span></div></label>
+                </div>
+
+                <div class="input-label" style="margin-top: 20px;">特殊需求 (可选)</div>
+                <div class="icon-options">
+                    <label><input type="checkbox" name="special-needs" value="无障碍设施"><div class="content"><div class="icon">♿</div><span>无障碍设施</span></div></label>
+                    <label><input type="checkbox" name="special-needs" value="婴儿友好"><div class="content"><div class="icon">👶</div><span>婴儿友好</span></div></label>
+                    <label><input type="checkbox" name="special-needs" value="素食选择"><div class="content"><div class="icon">🥗</div><span>素食选择</span></div></label>
+                    <label><input type="checkbox" name="special-needs" value="宠物友好"><div class="content"><div class="icon">🐕</div><span>宠物友好</span></div></label>
+                    <label><input type="checkbox" name="special-needs" value="预算有限"><div class="content"><div class="icon">💰</div><span>预算有限</span></div></label>
+                    <label><input type="checkbox" name="special-needs" value="避免人群"><div class="content"><div class="icon">🤫</div><span>避免人群</span></div></label>
+                </div>
+
+                <div class="input-group" style="margin-top: 15px;">
+                    <label for="other-preferences">其他偏好或要求</label>
+                    <textarea id="other-preferences" rows="3" placeholder="例如：喜欢安静的地方、对某些食物过敏、希望有教育意义的活动等..."></textarea>
+                </div>
+                </div>
+            </div>
+
             <!-- 交通和天气 -->
             <div class="form-block">
-                <h3><span>🚗</span>第五步：交通与天气</h3>
+                <h3><span>🚗</span>第六步：交通与天气</h3>
+                <div class="form-block-content">
                 <div class="input-label">去目的地坐什么？</div>
                 <div class="icon-options">
                     <label><input type="radio" name="main-transport" value="飞机"><div class="content"><div class="icon">✈️</div><span>飞机</span></div></label>
@@ -1596,54 +1853,29 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     <input type="text" id="custom-daily-transport" placeholder="请输入其他交通方式，例如：共享单车、电动滑板车、摩托车等">
                 </div>
 
-                <div class="input-label" style="margin-top: 15px;">天气信息</div>
-                <div class="input-group">
-                    <label>
-                        <input type="checkbox" id="auto-weather" checked>
-                        自动查询天气预报 (需填写出发日期和目的地)
-                    </label>
-                </div>
-                <div id="manual-weather-section" style="margin-top: 10px;">
-                    <div class="input-label">或手动选择预计天气：</div>
-                    <div class="icon-options">
-                        <label><input type="radio" name="weather" value="晴天" checked><div class="content"><div class="icon">☀️</div><span>晴天</span></div></label>
-                        <label><input type="radio" name="weather" value="多云"><div class="content"><div class="icon">☁️</div><span>多云</span></div></label>
-                        <label><input type="radio" name="weather" value="下雨"><div class="content"><div class="icon">🌦️</div><span>下雨</span></div></label>
-                        <label><input type="radio" name="weather" value="下雪"><div class="content"><div class="icon">❄️</div><span>下雪</span></div></label>
-                    </div>
-                </div>
-                <div id="weather-status" style="font-size: 0.9em; color: #4CAF50; margin-top: 5px;"></div>
-            </div>
-
-            <!-- 兴趣爱好 -->
-            <div class="form-block">
-                <h3><span>🎯</span>第六步：兴趣爱好</h3>
-                <div class="input-label">选择感兴趣的活动类型 (可多选)</div>
+                <div class="input-label" style="margin-top: 15px;">出行季节</div>
                 <div class="icon-options">
-                    <label><input type="checkbox" name="interest" value="运动活动"><div class="content"><div class="icon">⚽</div><span>运动活动</span></div></label>
-                    <label><input type="checkbox" name="interest" value="手工艺"><div class="content"><div class="icon">🎨</div><span>手工艺</span></div></label>
+                    <label><input type="radio" name="season" value="春季" checked><div class="content"><div class="icon">🌸</div><span>春季</span><div style="font-size:0.8em;color:#666;margin-top:3px;">3-5月，温暖舒适</div></div></label>
+                    <label><input type="radio" name="season" value="夏季"><div class="content"><div class="icon">☀️</div><span>夏季</span><div style="font-size:0.8em;color:#666;margin-top:3px;">6-8月，炎热多雨</div></div></label>
+                    <label><input type="radio" name="season" value="秋季"><div class="content"><div class="icon">🍂</div><span>秋季</span><div style="font-size:0.8em;color:#666;margin-top:3px;">9-11月，凉爽宜人</div></div></label>
+                    <label><input type="radio" name="season" value="冬季"><div class="content"><div class="icon">❄️</div><span>冬季</span><div style="font-size:0.8em;color:#666;margin-top:3px;">12-2月，寒冷干燥</div></div></label>
                 </div>
-
-                <div class="input-group" style="margin-top: 15px;">
-                    <label for="custom-interests">其他兴趣爱好 (自由填写)</label>
-                    <textarea id="custom-interests" rows="3" placeholder="例如：寻找甲虫、逛文具店、看街头表演、寻找当地特色小店、体验传统手工艺..."></textarea>
-                </div>
-
-                <div class="input-group" style="margin-top: 15px;">
-                    <label for="special-needs">特殊需求或注意事项</label>
-                    <textarea id="special-needs" rows="3" placeholder="例如：孩子对花生过敏、需要婴儿车友善的场所、老人行动不便需要无障碍设施、素食需求..."></textarea>
                 </div>
             </div>
+
+
 
             <!-- 行李清单 -->
             <div class="form-block">
                 <h3><span>🎒</span>第七步：行李清单</h3>
+                <div class="form-block-content">
                 <div class="input-label">儿童行李清单 (让AI参考)</div>
                 <div class="dynamic-list" id="checklist-items">
                     <div class="list-item"><input type="text" value="最喜欢的小熊玩偶"><button type="button" class="remove-btn">-</button></div>
                     <div class="list-item"><input type="text" value="恐龙绘本"><button type="button" class="remove-btn">-</button></div>
                 </div>
                 <button type="button" class="add-btn" id="add-checklist-btn">+</button>
+                </div>
             </div>
 
             <button type="submit" class="submit-btn" id="generate-btn" disabled>✨ 生成旅行手帐 ✨</button>
@@ -1708,7 +1940,10 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                 ];
 
                 // DOM 元素
-                const apiKeyInput = document.getElementById('api-key');
+                const geminiApiKeyInput = document.getElementById('gemini-api-key');
+                const openaiApiKeyInput = document.getElementById('openai-api-key');
+                const deepseekApiKeyInput = document.getElementById('deepseek-api-key');
+                const customApiKeyInput = document.getElementById('custom-api-key');
                 const apiProviderSelect = document.getElementById('api-provider');
                 const customEndpointGroup = document.getElementById('custom-endpoint-group');
                 const customEndpointInput = document.getElementById('custom-endpoint');
@@ -1721,6 +1956,77 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                 const enableSearchCheckbox = document.getElementById('enable-search');
                 const searchApiGroup = document.getElementById('search-api-group');
                 const searchDescription = document.getElementById('search-description');
+
+                // 获取当前选中服务商的API Key
+                function getCurrentApiKey() {
+                    const provider = apiProviderSelect.value;
+                    switch (provider) {
+                        case 'gemini':
+                            return geminiApiKeyInput.value.trim();
+                        case 'openai':
+                            return openaiApiKeyInput.value.trim();
+                        case 'deepseek':
+                            return deepseekApiKeyInput.value.trim();
+                        case 'custom':
+                            return customApiKeyInput.value.trim();
+                        default:
+                            return '';
+                    }
+                }
+
+                // 获取当前选中服务商的API Key输入框
+                function getCurrentApiKeyInput() {
+                    const provider = apiProviderSelect.value;
+                    switch (provider) {
+                        case 'gemini':
+                            return geminiApiKeyInput;
+                        case 'openai':
+                            return openaiApiKeyInput;
+                        case 'deepseek':
+                            return deepseekApiKeyInput;
+                        case 'custom':
+                            return customApiKeyInput;
+                        default:
+                            return null;
+                    }
+                }
+
+                // 更新API Key输入框显示
+                function updateApiKeyVisibility() {
+                    const provider = apiProviderSelect.value;
+
+                    // 隐藏所有API Key输入框
+                    document.getElementById('gemini-key-group').style.display = 'none';
+                    document.getElementById('openai-key-group').style.display = 'none';
+                    document.getElementById('deepseek-key-group').style.display = 'none';
+                    document.getElementById('custom-key-group').style.display = 'none';
+
+                    // 显示对应的API Key输入框
+                    switch (provider) {
+                        case 'gemini':
+                            document.getElementById('gemini-key-group').style.display = 'block';
+                            break;
+                        case 'openai':
+                            document.getElementById('openai-key-group').style.display = 'block';
+                            break;
+                        case 'deepseek':
+                            document.getElementById('deepseek-key-group').style.display = 'block';
+                            break;
+                        case 'custom':
+                            document.getElementById('custom-key-group').style.display = 'block';
+                            break;
+                    }
+
+                    // 更新拉取模型按钮状态
+                    updateFetchButtonState();
+                }
+
+                // 更新拉取模型按钮状态
+                function updateFetchButtonState() {
+                    const apiKey = getCurrentApiKey();
+                    fetchModelsBtn.disabled = !apiKey;
+                }
+
                 const tripForm = document.getElementById('trip-form');
                 const submitBtn = document.getElementById('generate-btn');
                 const loadingIndicator = document.getElementById('loading-indicator');
@@ -1750,19 +2056,35 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             const settings = JSON.parse(savedSettings);
 
                             // 恢复API设置
-                            if (settings.apiKey) apiKeyInput.value = settings.apiKey;
+                            if (settings.geminiApiKey) geminiApiKeyInput.value = settings.geminiApiKey;
+                            if (settings.openaiApiKey) openaiApiKeyInput.value = settings.openaiApiKey;
+                            if (settings.deepseekApiKey) deepseekApiKeyInput.value = settings.deepseekApiKey;
+                            if (settings.customApiKey) customApiKeyInput.value = settings.customApiKey;
                             if (settings.apiProvider) apiProviderSelect.value = settings.apiProvider;
                             if (settings.customEndpoint) customEndpointInput.value = settings.customEndpoint;
                             if (settings.searchApiKey) searchApiKeyInput.value = settings.searchApiKey;
                             if (settings.enableSearch !== undefined) enableSearchCheckbox.checked = settings.enableSearch;
 
-                            // 恢复模型选择
-                            if (settings.models && settings.models.length > 0) {
+                            // 恢复当前服务商的模型选择
+                            const currentProvider = apiProviderSelect.value;
+                            const providerModelsKey = `${currentProvider}_models`;
+                            const providerSelectedModelKey = `${currentProvider}_selectedModel`;
+
+                            if (settings[providerModelsKey] && settings[providerModelsKey].length > 0) {
+                                modelSelect.innerHTML = settings[providerModelsKey].map(model => `<option value="${model}">${model}</option>`).join('');
+                                modelSelect.disabled = false;
+                                if (settings[providerSelectedModelKey]) {
+                                    modelSelect.value = settings[providerSelectedModelKey];
+                                }
+                                console.log(`恢复${currentProvider}的模型选择:`, settings[providerSelectedModelKey]);
+                            } else if (settings.models && settings.models.length > 0) {
+                                // 向后兼容：如果没有服务商特定的模型，使用通用的模型列表
                                 modelSelect.innerHTML = settings.models.map(model => `<option value="${model}">${model}</option>`).join('');
                                 modelSelect.disabled = false;
                                 if (settings.selectedModel) {
                                     modelSelect.value = settings.selectedModel;
                                 }
+                                console.log('使用通用模型选择:', settings.selectedModel);
                             }
 
                             settingsStatus.textContent = '已加载保存的设置';
@@ -1770,8 +2092,8 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             validateForm();
                         }
 
-                        // 更新按钮状态
-                        fetchModelsBtn.disabled = !apiKeyInput.value.trim();
+                        // 更新API Key显示和按钮状态
+                        updateApiKeyVisibility();
                     } catch (error) {
                         console.error('加载设置失败:', error);
                         settingsStatus.textContent = '加载设置失败';
@@ -1785,15 +2107,31 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                 function saveSettings() {
                     try {
-                        const settings = {
-                            apiKey: apiKeyInput.value,
-                            apiProvider: apiProviderSelect.value,
-                            customEndpoint: customEndpointInput.value,
-                            searchApiKey: searchApiKeyInput.value,
-                            enableSearch: enableSearchCheckbox.checked,
-                            models: Array.from(modelSelect.options).map(option => option.value),
-                            selectedModel: modelSelect.value
-                        };
+                        // 获取现有设置
+                        const existingSettings = localStorage.getItem('travelPlannerSettings');
+                        const settings = existingSettings ? JSON.parse(existingSettings) : {};
+
+                        // 更新基本设置
+                        settings.geminiApiKey = geminiApiKeyInput.value;
+                        settings.openaiApiKey = openaiApiKeyInput.value;
+                        settings.deepseekApiKey = deepseekApiKeyInput.value;
+                        settings.customApiKey = customApiKeyInput.value;
+                        settings.apiProvider = apiProviderSelect.value;
+                        settings.customEndpoint = customEndpointInput.value;
+                        settings.searchApiKey = searchApiKeyInput.value;
+                        settings.enableSearch = enableSearchCheckbox.checked;
+
+                        // 为当前服务商保存模型列表
+                        const currentProvider = apiProviderSelect.value;
+                        const providerModelsKey = `${currentProvider}_models`;
+                        const providerSelectedModelKey = `${currentProvider}_selectedModel`;
+
+                        settings[providerModelsKey] = Array.from(modelSelect.options).map(option => option.value);
+                        settings[providerSelectedModelKey] = modelSelect.value;
+
+                        // 保持向后兼容
+                        settings.models = Array.from(modelSelect.options).map(option => option.value);
+                        settings.selectedModel = modelSelect.value;
 
                         localStorage.setItem('travelPlannerSettings', JSON.stringify(settings));
                         settingsStatus.textContent = '设置已保存';
@@ -1818,8 +2156,11 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         localStorage.removeItem('travelPlannerSettings');
 
                         // 清除表单
-                        apiKeyInput.value = '';
-                        apiProviderSelect.value = 'openai';
+                        geminiApiKeyInput.value = '';
+                        openaiApiKeyInput.value = '';
+                        deepseekApiKeyInput.value = '';
+                        customApiKeyInput.value = '';
+                        apiProviderSelect.value = 'gemini';
                         customEndpointInput.value = '';
                         searchApiKeyInput.value = '';
                         enableSearchCheckbox.checked = true;
@@ -1849,6 +2190,131 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     }
                 }
 
+                // 初始化可编辑元素
+                function initializeEditableElements() {
+                    // 自动调整textarea高度
+                    const textareas = document.querySelectorAll('.editable-mission, .editable-funfact, .editable-challenge, .editable-knowledge, .editable-story, .editable-prompt, .editable-journal');
+                    textareas.forEach(textarea => {
+                        // 初始化高度
+                        textarea.style.height = 'auto';
+                        textarea.style.height = textarea.scrollHeight + 'px';
+
+                        // 添加输入事件监听
+                        textarea.addEventListener('input', function() {
+                            this.style.height = 'auto';
+                            this.style.height = this.scrollHeight + 'px';
+                        });
+                    });
+
+                    // 自动调整input宽度
+                    const inputs = document.querySelectorAll('.editable-title, .editable-info, .editable-topic');
+                    inputs.forEach(input => {
+                        // 初始化宽度
+                        adjustInputWidth(input);
+
+                        // 添加输入事件监听
+                        input.addEventListener('input', function() {
+                            adjustInputWidth(this);
+                        });
+                    });
+
+                    // 初始化交互元素（画布等）
+                    const canvases = document.querySelectorAll('.drawing-area canvas');
+                    canvases.forEach(canvas => {
+                        const ctx = canvas.getContext('2d');
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 3;
+                        ctx.lineCap = 'round';
+
+                        let isDrawing = false;
+
+                        canvas.addEventListener('mousedown', (e) => {
+                            isDrawing = true;
+                            const rect = canvas.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            ctx.beginPath();
+                            ctx.moveTo(x, y);
+                        });
+
+                        canvas.addEventListener('mousemove', (e) => {
+                            if (!isDrawing) return;
+                            const rect = canvas.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        });
+
+                        canvas.addEventListener('mouseup', () => {
+                            isDrawing = false;
+                        });
+
+                        canvas.addEventListener('mouseout', () => {
+                            isDrawing = false;
+                        });
+                    });
+                }
+
+                function adjustInputWidth(input) {
+                    // 创建临时元素来测量文本宽度
+                    const temp = document.createElement('span');
+                    temp.style.visibility = 'hidden';
+                    temp.style.position = 'absolute';
+                    temp.style.fontSize = window.getComputedStyle(input).fontSize;
+                    temp.style.fontFamily = window.getComputedStyle(input).fontFamily;
+                    temp.style.fontWeight = window.getComputedStyle(input).fontWeight;
+                    temp.textContent = input.value || input.placeholder;
+                    document.body.appendChild(temp);
+
+                    const width = Math.max(temp.offsetWidth + 20, parseInt(input.style.minWidth) || 100);
+                    input.style.width = width + 'px';
+
+                    document.body.removeChild(temp);
+                }
+
+                // 折叠功能
+                function initializeCollapsible() {
+                    const formBlocks = document.querySelectorAll('.form-block');
+
+                    formBlocks.forEach((block, index) => {
+                        const header = block.querySelector('h3');
+                        const content = block.querySelector('.form-block-content');
+
+                        if (header && content) {
+                            // AI助手(index=0)默认折叠，第一步(index=1)默认展开，其他折叠
+                            if (index !== 1) {
+                                block.classList.add('collapsed');
+                            }
+
+                            header.addEventListener('click', () => {
+                                block.classList.toggle('collapsed');
+
+                                // 平滑动画
+                                if (block.classList.contains('collapsed')) {
+                                    content.style.maxHeight = '0px';
+                                } else {
+                                    content.style.maxHeight = content.scrollHeight + 'px';
+
+                                    // 动画完成后移除maxHeight限制
+                                    setTimeout(() => {
+                                        if (!block.classList.contains('collapsed')) {
+                                            content.style.maxHeight = 'none';
+                                        }
+                                    }, 300);
+                                }
+                            });
+
+                            // 设置初始状态
+                            if (block.classList.contains('collapsed')) {
+                                content.style.maxHeight = '0px';
+                            } else {
+                                content.style.maxHeight = 'none';
+                            }
+                        }
+                    });
+                }
+
                 // 初始化
                 document.addEventListener('DOMContentLoaded', () => {
                     console.log('DOM loaded, initializing...');
@@ -1860,10 +2326,11 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     updateCustomEndpointVisibility();
                     updateMainTransportUI();
                     updateOptionStyles();
+                    initializeCollapsible();
 
-                    // 初始化按钮状态
-                    fetchModelsBtn.disabled = !apiKeyInput.value.trim();
-                    console.log('API Key present:', !!apiKeyInput.value.trim());
+                    // 初始化API Key显示和按钮状态
+                    updateApiKeyVisibility();
+                    console.log('API Key present:', !!getCurrentApiKey());
                     console.log('Fetch button disabled:', fetchModelsBtn.disabled);
 
                     console.log('Initialization complete');
@@ -1874,7 +2341,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                     e.preventDefault();
 
                     // 验证必填字段
-                    const apiKey = apiKeyInput.value.trim();
+                    const apiKey = getCurrentApiKey();
                     const selectedModel = modelSelect.value;
                     const provider = apiProviderSelect.value;
 
@@ -1905,26 +2372,70 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                         // 解析响应
                         let planData;
+                        console.log('原始AI响应长度:', response.length);
+                        console.log('原始AI响应前500字符:', response.substring(0, 500));
+
                         try {
                             // 尝试直接解析为JSON
                             planData = JSON.parse(response);
+                            console.log('直接JSON解析成功');
                         } catch (e) {
-                            // 如果直接解析失败，尝试提取JSON部分
-                            console.log('Direct JSON parse failed, trying to extract JSON...');
-                            const jsonMatch = response.match(/\{[\s\S]*\}/);
+                            console.log('直接JSON解析失败，尝试其他方法...');
+
+                            // 方法1: 提取最大的JSON对象
+                            let jsonMatch = response.match(/\{[\s\S]*\}/);
                             if (jsonMatch) {
                                 try {
                                     planData = JSON.parse(jsonMatch[0]);
+                                    console.log('提取JSON对象成功');
                                 } catch (e2) {
-                                    throw new Error('AI返回的内容不是有效的JSON格式');
+                                    console.log('提取的JSON对象解析失败，尝试清理...');
+
+                                    // 方法2: 清理常见的非JSON内容
+                                    let cleanedResponse = response
+                                        .replace(/```json\s*/gi, '')  // 移除markdown代码块标记
+                                        .replace(/```\s*/gi, '')      // 移除markdown代码块结束标记
+                                        .replace(/^[^{]*/, '')        // 移除开头的非JSON内容
+                                        .replace(/[^}]*$/, '}')       // 确保以}结尾
+                                        .trim();
+
+                                    try {
+                                        planData = JSON.parse(cleanedResponse);
+                                        console.log('清理后JSON解析成功');
+                                    } catch (e3) {
+                                        console.log('清理后仍然解析失败，尝试查找JSON数组...');
+
+                                        // 方法3: 查找JSON数组
+                                        const arrayMatch = response.match(/\[[\s\S]*\]/);
+                                        if (arrayMatch) {
+                                            try {
+                                                const arrayData = JSON.parse(arrayMatch[0]);
+                                                planData = { itinerary: arrayData };
+                                                console.log('JSON数组解析成功，包装为对象');
+                                            } catch (e4) {
+                                                console.error('所有解析方法都失败了');
+                                                console.error('原始响应:', response);
+                                                throw new Error(`AI返回的内容不是有效的JSON格式。响应内容: ${response.substring(0, 200)}...`);
+                                            }
+                                        } else {
+                                            console.error('未找到有效的JSON结构');
+                                            console.error('原始响应:', response);
+                                            throw new Error(`AI返回的内容中没有找到JSON格式的数据。响应内容: ${response.substring(0, 200)}...`);
+                                        }
+                                    }
                                 }
                             } else {
-                                throw new Error('AI返回的内容中没有找到JSON格式的数据');
+                                console.error('未找到JSON对象');
+                                console.error('原始响应:', response);
+                                throw new Error(`AI返回的内容中没有找到JSON格式的数据。响应内容: ${response.substring(0, 200)}...`);
                             }
                         }
 
                         // 渲染计划
                         renderPlan(planData);
+
+                        // 初始化可编辑元素
+                        initializeEditableElements();
 
                         // 隐藏加载状态，显示结果
                         hideLoading();
@@ -1983,6 +2494,18 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         };
                     }).filter(member => member.name);
 
+                    // 收集兴趣爱好
+                    const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked')).map(input => input.value);
+
+                    // 收集特殊需求
+                    const specialNeeds = Array.from(document.querySelectorAll('input[name="special-needs"]:checked')).map(input => input.value);
+
+                    // 收集其他偏好
+                    const otherPreferences = document.getElementById('other-preferences')?.value?.trim() || '';
+
+                    // 收集季节信息
+                    const season = document.querySelector('input[name="season"]:checked')?.value || '春季';
+
                     return {
                         tripType,
                         language,
@@ -1990,6 +2513,10 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         destination,
                         duration,
                         familyMembers,
+                        interests,
+                        specialNeeds,
+                        otherPreferences,
+                        season,
                         enableSearch: enableSearchCheckbox.checked,
                         searchApiKey: searchApiKeyInput.value.trim()
                     };
@@ -2037,7 +2564,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                 // 验证表单并更新提交按钮状态
                 function validateForm() {
-                    const apiKey = apiKeyInput.value.trim();
+                    const apiKey = getCurrentApiKey();
                     const selectedModel = modelSelect.value;
                     const destination = destinationInput.value.trim();
 
@@ -2064,21 +2591,54 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                 // 设置事件监听器
                 function setupEventListeners() {
-                    apiKeyInput.addEventListener('input', () => {
-                        fetchModelsBtn.disabled = !apiKeyInput.value.trim();
-                        validateForm();
+                    // 为所有API Key输入框添加事件监听
+                    [geminiApiKeyInput, openaiApiKeyInput, deepseekApiKeyInput, customApiKeyInput].forEach(input => {
+                        input.addEventListener('input', () => {
+                            updateFetchButtonState();
+                            validateForm();
+                        });
                     });
+
                     fetchModelsBtn.addEventListener('click', fetchModels);
                     clearSettingsBtn.addEventListener('click', clearSettings);
                     apiProviderSelect.addEventListener('change', () => {
+                        updateApiKeyVisibility();
                         updateCustomEndpointVisibility();
                         updateGeminiSearchUI();
-                        modelSelect.innerHTML = '<option>请先输入Key并拉取模型</option>';
-                        modelSelect.disabled = true;
-                        apiStatus.textContent = '';
+
+                        // 尝试恢复该服务商的模型列表
+                        const savedSettings = localStorage.getItem('travelPlannerSettings');
+                        if (savedSettings) {
+                            const settings = JSON.parse(savedSettings);
+                            const currentProvider = apiProviderSelect.value;
+                            const providerModelsKey = `${currentProvider}_models`;
+                            const providerSelectedModelKey = `${currentProvider}_selectedModel`;
+
+                            if (settings[providerModelsKey] && settings[providerModelsKey].length > 0) {
+                                modelSelect.innerHTML = settings[providerModelsKey].map(model => `<option value="${model}">${model}</option>`).join('');
+                                modelSelect.disabled = false;
+                                if (settings[providerSelectedModelKey]) {
+                                    modelSelect.value = settings[providerSelectedModelKey];
+                                }
+                                apiStatus.textContent = `已恢复 ${settings[providerModelsKey].length} 个模型`;
+                            } else {
+                                modelSelect.innerHTML = '<option>请先输入Key并拉取模型</option>';
+                                modelSelect.disabled = true;
+                                apiStatus.textContent = '';
+                            }
+                        } else {
+                            modelSelect.innerHTML = '<option>请先输入Key并拉取模型</option>';
+                            modelSelect.disabled = true;
+                            apiStatus.textContent = '';
+                        }
+
                         validateForm();
                     });
-                    modelSelect.addEventListener('change', validateForm);
+                    modelSelect.addEventListener('change', () => {
+                        validateForm();
+                        saveSettings(); // 自动保存选择的模型
+                        console.log('模型选择已保存:', modelSelect.value);
+                    });
                     destinationInput.addEventListener('input', validateForm);
                     enableSearchCheckbox.addEventListener('change', updateGeminiSearchUI);
                     tripTypeSelector.addEventListener('change', () => {
@@ -2123,13 +2683,33 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                 // 生成AI提示词
                 function generatePrompt(formData) {
-                    const { destination, duration, familyMembers, tripType, language, usageMode, enableSearch } = formData;
+                    const { destination, duration, familyMembers, tripType, language, usageMode, enableSearch, interests, specialNeeds, otherPreferences, season } = formData;
 
                     let prompt = `请为我规划一个${destination}的${duration}天旅行计划。`;
 
                     if (familyMembers.length > 0) {
                         const familyInfo = familyMembers.map(m => `${m.name}(${m.age}岁)`).join('、');
                         prompt += `旅行成员：${familyInfo}。`;
+                    }
+
+                    // 添加季节信息
+                    if (season) {
+                        prompt += `出行季节：${season}。`;
+                    }
+
+                    // 添加兴趣爱好信息
+                    if (interests && interests.length > 0) {
+                        prompt += `我们的兴趣爱好：${interests.join('、')}。`;
+                    }
+
+                    // 添加特殊需求信息
+                    if (specialNeeds && specialNeeds.length > 0) {
+                        prompt += `特殊需求：${specialNeeds.join('、')}。`;
+                    }
+
+                    // 添加其他偏好
+                    if (otherPreferences) {
+                        prompt += `其他偏好和要求：${otherPreferences}。`;
                     }
 
                     if (enableSearch) {
@@ -2143,8 +2723,13 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 2. 每个地点都要提供三个版本：儿童版、青少年版、家长版
 3. 请确保内容丰富且适合不同年龄层
 
-**必需的JSON输出格式**
-请只返回以下JSON格式，不要包含任何其他文字：
+**重要：输出格式要求**
+1. 必须只返回纯JSON格式，不要包含任何解释文字
+2. 不要使用markdown代码块标记（如\`\`\`json）
+3. 不要在JSON前后添加任何说明文字
+4. 确保JSON格式完全正确，可以直接解析
+
+请严格按照以下JSON格式返回：
 
 {
   "itinerary": [
@@ -2183,7 +2768,14 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
   ]
 }
 
-请用${language}回应，并确保返回的是有效的JSON格式。`;
+
+重要提醒：
+- 请用${language}回应
+- 只返回JSON，不要任何额外文字
+- 确保JSON语法完全正确
+- 不要使用markdown格式
+
+现在请开始生成JSON：`;
 
                     return prompt;
                 }
@@ -2329,7 +2921,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
 
                 async function fetchModels() {
                     console.log('fetchModels called');
-                    const apiKey = apiKeyInput.value.trim();
+                    const apiKey = getCurrentApiKey();
                     const provider = apiProviderSelect.value;
                     console.log('API Key:', apiKey ? 'Present' : 'Missing', 'Provider:', provider);
                     if (!apiKey) {
@@ -2349,8 +2941,23 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             models = await getOpenAICompatibleModels(apiKey, endpoint);
                         }
 
+                        // 保存当前选择的模型
+                        const currentSelectedModel = modelSelect.value;
+
+                        // 更新模型列表
                         modelSelect.innerHTML = models.map(model => `<option value="${model}">${model}</option>`).join('');
                         modelSelect.disabled = false;
+
+                        // 尝试恢复之前选择的模型
+                        if (currentSelectedModel && models.includes(currentSelectedModel)) {
+                            modelSelect.value = currentSelectedModel;
+                            console.log('恢复之前选择的模型:', currentSelectedModel);
+                        } else if (models.length > 0) {
+                            // 如果之前的模型不在新列表中，选择第一个模型
+                            modelSelect.value = models[0];
+                            console.log('选择默认模型:', models[0]);
+                        }
+
                         apiStatus.textContent = `成功拉取 ${models.length} 个模型`;
                         saveSettings();
                         validateForm();
@@ -2369,14 +2976,38 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                         }
                         const data = await response.json();
                         console.log('Gemini API response:', data);
+                        console.log('Total models returned:', data.models?.length || 0);
 
-                        // 提取模型名称并过滤出生成模型
+                        if (!data.models || !Array.isArray(data.models)) {
+                            throw new Error('Invalid response format from Gemini API');
+                        }
+
+                        // 显示所有模型的详细信息
+                        data.models.forEach(model => {
+                            console.log('Model:', model.name, 'Methods:', model.supportedGenerationMethods);
+                        });
+
+                        // 不进行任何筛选，返回所有模型
                         const models = data.models
-                            .filter(model => model.supportedGenerationMethods &&
-                                           model.supportedGenerationMethods.includes('generateContent'))
-                            .map(model => model.name.replace('models/', ''));
+                            .map(model => model.name.replace('models/', ''))
+                            .sort(); // 按字母顺序排序
 
-                        console.log('Available Gemini models:', models);
+                        console.log('All Gemini models (no filtering):', models);
+                        console.log('Total number of models:', models.length);
+
+                        if (models.length === 0) {
+                            console.warn('No models found, using fallback list');
+                            return [
+                                'gemini-1.5-flash-latest',
+                                'gemini-1.5-pro-latest',
+                                'gemini-1.0-pro',
+                                'gemini-1.5-flash',
+                                'gemini-1.5-pro',
+                                'gemini-pro',
+                                'gemini-pro-vision'
+                            ];
+                        }
+
                         return models;
                     } catch (error) {
                         console.warn('Failed to fetch Gemini models from API, using fallback list:', error);
@@ -2386,7 +3017,9 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             'gemini-1.5-pro-latest',
                             'gemini-1.0-pro',
                             'gemini-1.5-flash',
-                            'gemini-1.5-pro'
+                            'gemini-1.5-pro',
+                            'gemini-pro',
+                            'gemini-pro-vision'
                         ];
                     }
                 }
@@ -2599,23 +3232,26 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             <h2 class="location-title-h2">(第 ${day} 天 | 预计需要: ${estimatedTime || '一小会儿'})</h2>
 
                             <div class="section-container">
-                                <h3 class="section-title-h3"><span>🗺️</span> ${cv.title || '我的冒险任务'}</h3>
+                                <h3 class="section-title-h3"><span>🗺️</span> <input type="text" value="${cv.title || '我的冒险任务'}" class="editable-title" style="border: none; background: transparent; font-size: inherit; font-weight: inherit; color: inherit; width: auto; min-width: 200px;"></h3>
                                 <ul class="mission-list">
-                                    ${(cv.missions || []).map(m => `<li class="mission-item">□ ${m}</li>`).join('')}
+                                    ${(cv.missions || []).map((m, i) => `<li class="mission-item">□ <textarea class="editable-mission" style="border: none; background: transparent; resize: none; width: 100%; font-size: inherit; font-family: inherit; color: inherit; overflow: hidden;" rows="1" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${m}</textarea></li>`).join('')}
                                 </ul>
                             </div>
 
                             <div class="section-container">
                                 <h3 class="section-title-h3"><span>💡</span> 趣味小知识</h3>
                                 <div class="fun-fact-box">
-                                    <p>${cv.funFact || '这里藏着什么秘密呢？'}</p>
+                                    <textarea class="editable-funfact" style="border: none; background: transparent; resize: none; width: 100%; font-size: inherit; font-family: inherit; color: inherit; text-align: center; overflow: hidden;" rows="2" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${cv.funFact || '这里藏着什么秘密呢？'}</textarea>
                                 </div>
                             </div>
 
                             <div class="section-container">
-                                <h3 class="section-title-h3"><span>🎨</span> 我的创作区
                                 <div class="creative-zone">
-                                    <p>${cv.creativePrompt || '在这里画下你看到的最酷的东西！'}</p>
+                                    <div class="creative-zone-header">🎨 儿童创作区</div>
+                                    <div class="creative-prompt">${cv.creativePrompt || '在这里画下你看到的最酷的东西！'}</div>
+                                    <div class="drawing-area">
+                                        <canvas width="400" height="250"></canvas>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2639,13 +3275,13 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             <h2 class="location-title-h2">Day ${day} | Est. ${estimatedTime || 'N/A'}</h2>
 
                             <div class="section-container">
-                                <h3 class="section-title-h3"><span>🎯</span> ${tv.title || 'My Challenges'}</h3>
-                                ${(tv.challenges || []).map(c => `<p class="teen-mission-item">/ / ${c}</p>`).join('')}
+                                <h3 class="section-title-h3"><span>🎯</span> <input type="text" value="${tv.title || 'My Challenges'}" class="editable-title" style="border: none; background: transparent; font-size: inherit; font-weight: inherit; color: inherit; width: auto; min-width: 200px;"></h3>
+                                ${(tv.challenges || []).map(c => `<p class="teen-mission-item">/ / <textarea class="editable-challenge" style="border: none; background: transparent; resize: none; width: calc(100% - 30px); font-size: inherit; font-family: inherit; color: inherit; overflow: hidden; display: inline;" rows="1" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${c}</textarea></p>`).join('')}
                             </div>
 
                             <div class="section-container">
                                 <h3 class="section-title-h3"><span>🧠</span> Knowledge+</h3>
-                                <div class="knowledge-plus-box">${tv.knowledgePlus || 'Discover something new.'}</div>
+                                <div class="knowledge-plus-box"><textarea class="editable-knowledge" style="border: none; background: transparent; resize: none; width: 100%; font-size: inherit; font-family: inherit; color: inherit; overflow: hidden;" rows="2" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${tv.knowledgePlus || 'Discover something new.'}</textarea></div>
                             </div>
 
                             <div class="section-container">
@@ -2672,8 +3308,12 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             </div>
 
                             <div class="section-container">
-                                 <h3 class="section-title-h3"><span>✍️</span> Free Space</h3>
-                                 <div class="dot-grid" style="min-height: 200px;"></div>
+                                 <div class="free-space-zone">
+                                     <div class="free-space-header">✍️ Free Space</div>
+                                     <div class="drawing-area">
+                                         <canvas width="400" height="250"></canvas>
+                                     </div>
+                                 </div>
                             </div>
                         </div>
                     `;
@@ -2689,12 +3329,12 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             <h2 class="location-title-h2">(第 ${day} 天 | 参考用时: ${estimatedTime || '灵活安排'})</h2>
 
                             <div class="section-container">
-                                <h3 class="section-title-h3"><span>📋</span> ${pv.title || '实用信息'}</h3>
+                                <h3 class="section-title-h3"><span>📋</span> <input type="text" value="${pv.title || '实用信息'}" class="editable-title" style="border: none; background: transparent; font-size: inherit; font-weight: inherit; color: inherit; width: auto; min-width: 200px;"></h3>
                                 <div class="practical-info-box">
                                     <ul>
-                                        <li><strong>建议时间:</strong> ${pv.practicalInfo?.timing || '灵活安排'}</li>
-                                        <li><strong>交通建议:</strong> ${pv.practicalInfo?.transport || '根据实际情况选择'}</li>
-                                        <li><strong>重要提示:</strong> ${pv.practicalInfo?.tips || '无'}</li>
+                                        <li><strong>建议时间:</strong> <input type="text" value="${pv.practicalInfo?.timing || '灵活安排'}" class="editable-info" style="border: none; background: transparent; font-size: inherit; font-family: inherit; color: inherit; width: auto; min-width: 150px;"></li>
+                                        <li><strong>交通建议:</strong> <input type="text" value="${pv.practicalInfo?.transport || '根据实际情况选择'}" class="editable-info" style="border: none; background: transparent; font-size: inherit; font-family: inherit; color: inherit; width: auto; min-width: 200px;"></li>
+                                        <li><strong>重要提示:</strong> <input type="text" value="${pv.practicalInfo?.tips || '无'}" class="editable-info" style="border: none; background: transparent; font-size: inherit; font-family: inherit; color: inherit; width: auto; min-width: 150px;"></li>
                                     </ul>
                                 </div>
                             </div>
@@ -2703,8 +3343,8 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                                 <h3 class="section-title-h3"><span>🎙️</span> 故事宝库</h3>
                                 ${(pv.storytellingToolkit || []).map(s => `
                                     <div class="storytelling-item">
-                                        <h4>${s.topic}</h4>
-                                        <p>${s.story}</p>
+                                        <h4><input type="text" value="${s.topic}" class="editable-topic" style="border: none; background: transparent; font-size: inherit; font-weight: inherit; color: inherit; width: 100%;"></h4>
+                                        <textarea class="editable-story" style="border: none; background: transparent; resize: none; width: 100%; font-size: inherit; font-family: inherit; color: inherit; overflow: hidden;" rows="3" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${s.story}</textarea>
                                     </div>
                                 `).join('')}
                             </div>
@@ -2713,7 +3353,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                                 <h3 class="section-title-h3"><span>🤝</span> 互动指南</h3>
                                  ${(pv.engagementGuide || []).map(e => `
                                     <div class="engagement-item">
-                                        <p>💡 ${e.prompt}</p>
+                                        <p>💡 <textarea class="editable-prompt" style="border: none; background: transparent; resize: none; width: calc(100% - 30px); font-size: inherit; font-family: inherit; color: inherit; overflow: hidden; display: inline;" rows="1" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${e.prompt}</textarea></p>
                                     </div>
                                 `).join('')}
                             </div>
@@ -2721,7 +3361,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
                             <div class="section-container">
                                 <h3 class="section-title-h3"><span>📔</span> 今日手记</h3>
                                 <div class="journal-space">
-                                    <p>${pv.journalPrompt || '记录下在这里的美好瞬间...'}</p>
+                                    <textarea class="editable-journal" style="border: none; background: transparent; resize: none; width: 100%; font-size: inherit; font-family: inherit; color: inherit; overflow: hidden; min-height: 100px;" rows="4" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'">${pv.journalPrompt || '记录下在这里的美好瞬间...'}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -3134,13 +3774,7 @@ AI会优先安排这些景点，并补充其他推荐地点"></textarea>
         });
     }
 
-    // Re-initialize when a new plan is rendered.
-    const originalRenderPlan = renderPlan;
-    renderPlan = function(data) {
-        originalRenderPlan(data);
-        // Use a timeout to ensure the DOM is updated before we try to find the new elements
-        setTimeout(initializeInteractiveElements, 500);
-    }
+
 
 </script>
 </body>
